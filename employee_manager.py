@@ -179,3 +179,4 @@ def delete_employee(emp_id):
         return False
 # Feature: Search Employee - search by ID, name, or department
 # Feature: Update Employee - modify existing employee records
+# Feature: Delete Employee - remove employees from the system
