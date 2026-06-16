@@ -55,7 +55,7 @@ def handle_delete():
 
 def main():
     """Main application entry point."""
-    print("\n🚀 Welcome to EMS v2.0 - Branch A!")
+    print("\n🚀 Welcome to Employee Management System v2.0!")
 
     while True:
         display_menu()
