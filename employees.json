@@ -1,0 +1,17 @@
+{
+    "EMP001": {
+        "name": "John Doe",
+        "department": "HR",
+        "position": "Manager"
+    },
+    "EMP002": {
+        "name": "Alice Smith",
+        "department": "IT",
+        "position": "Software Engineer"
+    },
+    "EMP003": {
+        "name": "Robert Brown",
+        "department": "Finance",
+        "position": "Accountant"
+    }
+}

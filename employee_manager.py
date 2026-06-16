@@ -1,182 +1,152 @@
 """
-Employee Manager - Core CRUD operations for Employee Management System.
-Handles Add, View, Search, Update, and Delete operations.
+Employee Manager - Core Business Logic & Data Persistence
+Manages CRUD operations, department listings, stats, and JSON file storage.
 """
 
-from employee import Employee
+import json
+import os
 
-DATA_FILE = "employees.txt"
+DATA_FILE = "employees.json"
 
 
 def load_employees():
-    """Load all employees from the data file."""
-    employees = []
+    """Load employee records from JSON file."""
+    if not os.path.exists(DATA_FILE):
+        return {}
     try:
         with open(DATA_FILE, "r") as file:
-            for line in file:
-                emp = Employee.from_string(line)
-                if emp:
-                    employees.append(emp)
-    except FileNotFoundError:
-        pass
-    return employees
+            return json.load(file)
+    except (json.JSONDecodeError, IOError):
+        return {}
 
 
-def save_employees(employees):
-    """Save all employees to the data file."""
-    with open(DATA_FILE, "w") as file:
-        for emp in employees:
-            file.write(emp.to_string() + "\n")
+def save_employees(data):
+    """Save employee records to JSON file."""
+    try:
+        with open(DATA_FILE, "w") as file:
+            json.dump(data, file, indent=4)
+        return True
+    except IOError:
+        return False
 
 
-def generate_emp_id(employees):
-    """Generate the next employee ID."""
-    if not employees:
-        return "EMP001"
-    max_id = max(int(emp.emp_id.replace("EMP", "")) for emp in employees)
-    return f"EMP{max_id + 1:03d}"
+def validate_employee_input(name, department, position):
+    """Validate name, department, and position inputs."""
+    if not name or not name.strip():
+        return False, "Employee name cannot be empty."
+    if not department or not department.strip():
+        return False, "Department cannot be empty."
+    if not position or not position.strip():
+        return False, "Position cannot be empty."
+    return True, ""
 
 
-# ==========================================
-# Feature: Add Employee
-# ==========================================
 def add_employee(name, department, position):
-    """
-    Add a new employee to the system.
+    """Add a new employee and persist data."""
+    is_valid, err_msg = validate_employee_input(name, department, position)
+    if not is_valid:
+        return None, err_msg
 
-    Args:
-        name (str): Employee's full name
-        department (str): Department name
-        position (str): Job position/title
+    data = load_employees()
 
-    Returns:
-        Employee: The newly created employee object
-    """
-    employees = load_employees()
-    emp_id = generate_emp_id(employees)
-    new_employee = Employee(emp_id, name, department, position)
-    employees.append(new_employee)
-    save_employees(employees)
-    print(f"\n✅ Employee added successfully!")
-    print(f"   {new_employee}")
-    return new_employee
-
-
-# ==========================================
-# Feature: View All Employees
-# ==========================================
-def view_employees():
-    """
-    Display all employees in a formatted table.
-
-    Returns:
-        list: List of all Employee objects
-    """
-    employees = load_employees()
-    if not employees:
-        print("\n📭 No employees found in the system.")
-        return employees
-
-    print("\n" + "=" * 70)
-    print(f"{'ID':<10} {'Name':<20} {'Department':<15} {'Position':<20}")
-    print("=" * 70)
-    for emp in employees:
-        print(f"{emp.emp_id:<10} {emp.name:<20} {emp.department:<15} {emp.position:<20}")
-    print("=" * 70)
-    print(f"Total employees: {len(employees)}")
-    return employees
-
-
-# ==========================================
-# Feature: Search Employee
-# ==========================================
-def search_employee(search_term):
-    """
-    Search for employees by ID, name, or department.
-
-    Args:
-        search_term (str): The search keyword
-
-    Returns:
-        list: List of matching Employee objects
-    """
-    employees = load_employees()
-    search_term = search_term.lower()
-    results = [
-        emp for emp in employees
-        if search_term in emp.emp_id.lower()
-        or search_term in emp.name.lower()
-        or search_term in emp.department.lower()
-    ]
-
-    if not results:
-        print(f"\n🔍 No employees found matching '{search_term}'.")
+    # Generate sequential ID (EMP001, EMP002, etc.)
+    if not data:
+        new_id = "EMP001"
     else:
-        print(f"\n🔍 Found {len(results)} employee(s):")
-        print("-" * 70)
-        for emp in results:
-            print(f"  {emp}")
-    return results
+        existing_ids = [int(emp_id.replace("EMP", "")) for emp_id in data.keys()]
+        next_id_num = max(existing_ids) + 1
+        new_id = f"EMP{next_id_num:03d}"
+
+    data[new_id] = {
+        "name": name.strip(),
+        "department": department.strip(),
+        "position": position.strip(),
+    }
+
+    if save_employees(data):
+        return new_id, "Employee added successfully."
+    return None, "Failed to save employee data."
 
 
-# ==========================================
-# Feature: Update Employee
-# ==========================================
-def update_employee(emp_id, name=None, department=None, position=None):
-    """
-    Update an existing employee's details.
+def view_all_employees():
+    """Retrieve all employee records."""
+    return load_employees()
 
-    Args:
-        emp_id (str): Employee ID to update
-        name (str, optional): New name
-        department (str, optional): New department
-        position (str, optional): New position
 
-    Returns:
-        Employee or None: Updated employee if found, None otherwise
-    """
-    employees = load_employees()
-    for emp in employees:
-        if emp.emp_id.lower() == emp_id.lower():
-            if name:
-                emp.name = name
-            if department:
-                emp.department = department
-            if position:
-                emp.position = position
-            save_employees(employees)
-            print(f"\n✅ Employee {emp_id} updated successfully!")
-            print(f"   {emp}")
-            return emp
-
-    print(f"\n❌ Employee with ID '{emp_id}' not found.")
+def search_employee(emp_id):
+    """Search employee by ID."""
+    data = load_employees()
+    emp_id_upper = emp_id.strip().upper()
+    if emp_id_upper in data:
+        # Return record with the ID included
+        record = data[emp_id_upper].copy()
+        record["id"] = emp_id_upper
+        return record
     return None
 
 
-# ==========================================
-# Feature: Delete Employee
-# ==========================================
+def update_employee(emp_id, name=None, department=None, position=None):
+    """Update employee details by ID."""
+    data = load_employees()
+    emp_id_upper = emp_id.strip().upper()
+
+    if emp_id_upper not in data:
+        return False, "Employee not found."
+
+    updated = False
+    if name and name.strip():
+        data[emp_id_upper]["name"] = name.strip()
+        updated = True
+    if department and department.strip():
+        data[emp_id_upper]["department"] = department.strip()
+        updated = True
+    if position and position.strip():
+        data[emp_id_upper]["position"] = position.strip()
+        updated = True
+
+    if not updated:
+        return False, "No fields updated."
+
+    if save_employees(data):
+        return True, "Employee details updated successfully."
+    return False, "Failed to save updated employee data."
+
+
 def delete_employee(emp_id):
-    """
-    Delete an employee from the system.
+    """Delete employee by ID."""
+    data = load_employees()
+    emp_id_upper = emp_id.strip().upper()
 
-    Args:
-        emp_id (str): Employee ID to delete
+    if emp_id_upper not in data:
+        return False, "Employee not found."
 
-    Returns:
-        bool: True if deleted successfully, False otherwise
-    """
-    employees = load_employees()
-    original_count = len(employees)
-    employees = [emp for emp in employees if emp.emp_id.lower() != emp_id.lower()]
+    del data[emp_id_upper]
+    if save_employees(data):
+        return True, "Employee deleted successfully."
+    return False, "Failed to save changes."
 
-    if len(employees) < original_count:
-        save_employees(employees)
-        print(f"\n✅ Employee {emp_id} deleted successfully!")
-        return True
-    else:
-        print(f"\n❌ Employee with ID '{emp_id}' not found.")
-        return False
-# Feature: Search Employee - search by ID, name, or department
-# Feature: Update Employee - modify existing employee records
-# Feature: Delete Employee - remove employees from the system
+
+def list_by_department(department):
+    """List all employees in a specific department."""
+    data = load_employees()
+    dept_lower = department.strip().lower()
+    results = {}
+    for emp_id, details in data.items():
+        if details["department"].lower() == dept_lower:
+            results[emp_id] = details
+    return results
+
+
+def get_statistics():
+    """Get high-level statistics of employees."""
+    data = load_employees()
+    total_employees = len(data)
+    if total_employees == 0:
+        return {"total": 0, "departments": {}}
+
+    dept_counts = {}
+    for details in data.values():
+        dept = details["department"]
+        dept_counts[dept] = dept_counts.get(dept, 0) + 1
+
+    return {"total": total_employees, "departments": dept_counts}

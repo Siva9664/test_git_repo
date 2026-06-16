@@ -1,101 +1,118 @@
 # 🏢 Employee Management System
 
-A command-line Employee Management Application built with Python for managing employee records efficiently.
+[![Notification Pipeline](https://github.com/Siva9664/test_git_repo/actions/workflows/every-push.yml/badge.svg)](https://github.com/Siva9664/test_git_repo/actions/workflows/every-push.yml)
+[![Pytest Suite CI](https://github.com/Siva9664/test_git_repo/actions/workflows/pytest-ci.yml/badge.svg)](https://github.com/Siva9664/test_git_repo/actions/workflows/pytest-ci.yml)
+[![Syntax Build Verification](https://github.com/Siva9664/test_git_repo/actions/workflows/syntax-validation.yml/badge.svg)](https://github.com/Siva9664/test_git_repo/actions/workflows/syntax-validation.yml)
 
-## 📋 Features
+An industry-standard Command Line Interface (CLI) application developed in Python to manage employee records. The system utilizes structured JSON persistence, features input validation, department-wise filtering, statistics aggregation, and includes a full suite of automated unit tests.
 
-- ✅ **Add Employee** – Register new employees with ID, name, department, and position
-- ✅ **View Employees** – Display all employee records in a formatted table
-- ✅ **Search Employee** – Find employees by ID, name, or department
-- ✅ **Update Employee** – Modify existing employee details
-- ✅ **Delete Employee** – Remove employee records
-- ✅ **Persistent Storage** – Employee data saved to `employees.txt`
+---
 
-## 🚀 Getting Started
+## 🚀 Key Features
 
-### Prerequisites
+* **CRUD Operations:** Easily add, view, update, and delete employee records.
+* **Structured Storage:** Automatically saves records to `employees.json` for persistence.
+* **Advanced Filters:** List employees by specific departments.
+* **System Stats:** View real-time totals and department-wise employee counts.
+* **Input Validation:** Restricts empty fields or incorrect formats.
+* **CI/CD Integration:** Automatically validates Python syntax and runs test suites via GitHub Actions.
 
-- Python 3.8 or higher
-
-### Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/<your-username>/employee-management-system.git
-
-# Navigate to the project directory
-cd employee-management-system
-
-# Run the application
-python app.py
-```
+---
 
 ## 📁 Project Structure
 
 ```
 employee-management-system/
-│
-├── README.md              # Project documentation
-├── .gitignore             # Git ignore rules
-├── app.py                 # Main application with menu system
-├── employee.py            # Employee class definition
-├── employee_manager.py    # Core CRUD operations
-├── utils.py               # Utility/helper functions
-├── employees.txt          # Employee data storage
+├── .github/
+│   └── workflows/
+│       ├── every-push.yml          # Trigger Notification Workflow
+│       ├── pytest-ci.yml           # Automated Testing Workflow
+│       └── syntax-validation.yml   # Build Syntax Verification
 ├── tests/
-│   └── test_employee.py   # Unit tests
-└── .github/
-    └── workflows/
-        └── python-app.yml # GitHub Actions CI/CD
+│   ├── __init__.py
+│   └── test_employee_manager.py    # Pytest unit tests
+├── .gitignore                      # Git ignored files configuration
+├── README.md                       # Comprehensive guide
+├── requirements.txt                # Project dependencies
+├── app.py                          # Main CLI application
+├── employee_manager.py             # Business logic & JSON storage
+└── employees.json                  # Persistent JSON storage
 ```
+
+---
+
+## 🛠️ Installation Instructions
+
+### Prerequisites
+* Python 3.11 or higher
+* Git
+
+### Step-by-Step Setup
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Siva9664/test_git_repo.git
+   cd test_git_repo
+   ```
+
+2. **Create a virtual environment (optional but recommended):**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+---
+
+## 💻 Usage Examples
+
+To run the application:
+```bash
+python app.py
+```
+
+### Main CLI Interface
+```text
+=============================================
+      🏢 EMPLOYEE MANAGEMENT SYSTEM
+=============================================
+  1. Add Employee
+  2. View All Employees
+  3. Search Employee by ID
+  4. Update Employee Details
+  5. Delete Employee
+  6. List Employees by Department
+  7. View Employee Statistics
+  8. Exit
+=============================================
+```
+
+---
 
 ## 🧪 Running Tests
 
+To run the automated test suite locally:
 ```bash
-python -m pytest tests/ -v
+# Install pytest first
+pip install pytest
+
+# Run the test suite
+pytest tests/ -v
 ```
 
-## 🌿 Branch Strategy
+---
 
-| Branch | Description |
-|--------|-------------|
-| `main` | Stable production code |
-| `develop` | Integration branch |
-| `feature-add-employee` | Add employee feature |
-| `feature-delete-employee` | Delete employee feature |
-| `feature-search-employee` | Search employee feature |
-| `feature-update-employee` | Update employee feature |
+## 🤝 Contribution Guidelines
 
-## 👥 Sample Employee Data
-
-| Employee ID | Name          | Department | Position          |
-|-------------|---------------|------------|-------------------|
-| EMP001      | John Doe      | HR         | Manager           |
-| EMP002      | Alice Smith   | IT         | Software Engineer |
-| EMP003      | Robert Brown  | Finance    | Accountant        |
-
-## 📝 Git Workflow
-
-This project follows the **Git Feature Branch Workflow**:
-
-1. Create a feature branch from `develop`
-2. Make changes and commit
-3. Push the branch and create a Pull Request
-4. Review, resolve conflicts if any, and merge
-5. Tag releases on `main`
-
-## 🏷️ Releases
-
-- `v1.0.0` – Initial release with basic CRUD operations
-- `v1.1.0` – Added search functionality
-- `v1.2.0` – Added update functionality
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👤 Author
-
-- **Siva** – AIML Department, AI Intern
-# Develop has moved forward
-# test_git_repo
+This repository follows the **Git Feature Branch Workflow**.
+1. Create a descriptive issue on GitHub describing your work.
+2. Fork the repository or create a new branch locally:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+3. Implement your changes, write tests, and commit with meaningful messages (e.g., `feat: add department listing`).
+4. Ensure all local tests pass.
+5. Push your branch to remote and open a Pull Request targeting the `develop` branch.

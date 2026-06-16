@@ -1,0 +1,14 @@
+name: Continuous Integration - Trigger Notification
+
+on:
+  push:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Display Success Message
+        run: echo "Build triggered successfully! Repository checked out."

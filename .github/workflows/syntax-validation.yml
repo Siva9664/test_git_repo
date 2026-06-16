@@ -1,0 +1,22 @@
+name: Continuous Integration - Build & Syntax Validation
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate Python Syntax
+        run: |
+          python -m py_compile app.py employee_manager.py
+          echo "Syntax verification passed for app.py and employee_manager.py"
