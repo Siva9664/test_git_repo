@@ -177,3 +177,4 @@ def delete_employee(emp_id):
     else:
         print(f"\n❌ Employee with ID '{emp_id}' not found.")
         return False
+# Feature: Search Employee - search by ID, name, or department
