@@ -178,3 +178,4 @@ def delete_employee(emp_id):
         print(f"\n❌ Employee with ID '{emp_id}' not found.")
         return False
 # Feature: Search Employee - search by ID, name, or department
+# Feature: Update Employee - modify existing employee records
