@@ -1,0 +1,3 @@
+EMP001|John Doe|HR|Manager
+EMP002|Alice Smith|IT|Software Engineer
+EMP003|Robert Brown|Finance|Accountant
